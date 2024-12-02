@@ -1,0 +1,3 @@
+
+3 Page option entry Page
+Patient Signin on entry if new patient then create id if old set new appointment
