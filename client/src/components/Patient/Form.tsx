@@ -18,6 +18,7 @@ const PatientForm = () => {
   const [problems, setProblems] = useState("");
   const [history, setHistory] = useState("");
   const [patientNumber, setPatientNumber] = useState("");
+  const [preferredAppointmentDate, setPreferredAppointmentDate] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -45,6 +46,7 @@ const PatientForm = () => {
           height: parseFloat(height),
           problems,
           history,
+          preferredAppointmentDate,
         }
       );
       console.log(`Document Created and email sent ${patientNumber}`);
@@ -58,7 +60,7 @@ const PatientForm = () => {
     try {
       const emailData = {
         to: email,
-        subject: "Test",
+        subject: "Successful registration",
         html: `
         <div style="">
         <h1>Thank you for registering</h1>
@@ -83,7 +85,7 @@ const PatientForm = () => {
   };
   const handleClick = () => {
     handleSubmit();
-    sendEmail();
+    //sendEmail();
     navigate("/patients/confirmation");
   };
 
@@ -152,6 +154,19 @@ const PatientForm = () => {
             type="number"
             id="height"
             onChange={(e) => setHeight(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col">
+          <label htmlFor="preferredAppointmentDate">
+            Preferred Appointment Date
+          </label>
+          <input
+            type="datetime-local"
+            id="preferredAppointmentDate"
+            onChange={(e) => {
+              const date = new Date(e.target.value);
+              setPreferredAppointmentDate(date.toISOString());
+            }}
           />
         </div>
       </div>
