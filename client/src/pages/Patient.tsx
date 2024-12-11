@@ -8,7 +8,6 @@ export default function Patient() {
   return (
     <div className="flex min-h-screen justify-center items-center flex-col relative">
       This is the patients form Page
-      <span>Current bugs: the patient id is being logged in the database but not getting sent in the email</span>
       <PatientForm />
     </div>
   );

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Models } from "appwrite";
 
 import { databases } from "../../../utils/appwrite";
-import { databaseId, collectionId } from "../../../utils/Credentials";
+import { databaseId, collectionIdPatients } from "../../../utils/Credentials";
 
 const AppointmentHistory = () => {
   const [appointments, setAppointments] = useState<Models.Document[]>([]);
@@ -14,7 +14,7 @@ const AppointmentHistory = () => {
       try {
         const response = await databases.listDocuments(
           databaseId,
-          collectionId
+          collectionIdPatients
         );
         setAppointments(response.documents);
         appointments

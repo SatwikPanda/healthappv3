@@ -4,7 +4,7 @@ import Button from "../Button";
 import { useNavigate } from "react-router-dom";
 import { databases } from "../../utils/appwrite";
 
-import { databaseId } from "../../utils/Credentials";
+import log from "../../utils/logger";
 
 const PatientForm = () => {
   const [fullName, setFullName] = useState("");
@@ -21,6 +21,34 @@ const PatientForm = () => {
   const [preferredAppointmentDate, setPreferredAppointmentDate] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const sendEmail = async (patientId) => {
+    try {
+      const emailData = {
+        to: email,
+        subject: "Successful registration",
+        html: `
+        <div style="">
+        <h1>Thank you for registering</h1>
+        <p>Your patient number is ${patientId}</p>
+        <p>Your patient number is ${fullName}</p>
+        </div>`,
+      };
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(emailData),
+      });
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleSubmit = async () => {
     const patientId = Date.now().toString();
@@ -49,43 +77,18 @@ const PatientForm = () => {
           preferredAppointmentDate,
         }
       );
-      console.log(`Document Created and email sent ${patientNumber}`);
+      log(`New appointment created with patient ID ${patientId}`);
+      sendEmail(patientId);
+      console.log(`Document Created and email sent ${patientId}`);
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
-  const sendEmail = async () => {
-    try {
-      const emailData = {
-        to: email,
-        subject: "Successful registration",
-        html: `
-        <div style="">
-        <h1>Thank you for registering</h1>
-        <p>Your patient number is ${patientNumber}</p>
-        <p>Your patient number is ${fullName}</p>
-        </div>`,
-      };
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(emailData),
-      });
 
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
   const handleClick = () => {
     handleSubmit();
-    //sendEmail();
     navigate("/patients/confirmation");
   };
 
