@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
+
 import { Models } from "appwrite";
+import { Query } from "appwrite";
 import { databases } from "../../../utils/appwrite";
 import { databaseId, collectionIdPatients } from "../../../utils/Credentials";
 
+import { RiSaveFill } from "react-icons/ri";
+
 import log from "../../../utils/logger";
 
-const AppointmentHistory = () => {
+const NewAppointments = () => {
   const [appointments, setAppointments] = useState<Models.Document[]>([]);
 
   useEffect(() => {
@@ -13,7 +18,8 @@ const AppointmentHistory = () => {
       try {
         const response = await databases.listDocuments(
           databaseId,
-          collectionIdPatients
+          collectionIdPatients,
+          [Query.equal("appointmentStatus", "pending")]
         );
         setAppointments(
           response.documents
@@ -30,13 +36,6 @@ const AppointmentHistory = () => {
     };
     fetchDocuments();
   }, []);
-
-  const getCurrentDateTime = () => {
-    const now = new Date();
-    const offset = now.getTimezoneOffset();
-    now.setMinutes(now.getMinutes() - offset); // Adjust to local time
-    return now.toISOString().slice(0, 16); // Format as YYYY-MM-DDTHH:mm
-  };
 
   const handleStatusChange = async (id: string, status: string) => {
     try {
@@ -87,8 +86,11 @@ const AppointmentHistory = () => {
 
   return (
     <div>
-      <h1 className="text-4xl font-medium py-14 px-10 w-full border-b-2 bg-white/5 border-[#DB1A5A] rounded-b-xl">
-        Appointments History
+      <h1 className="text-4xl flex items-center justify-between font-medium py-14 px-10 w-full border-b-2 bg-white/5 border-[#DB1A5A] rounded-b-xl">
+        New Appointments
+        <div className="bg-white text-black p-2 rounded-full hover:bg-[#DB1A5A] transition hover:text-white cursor-pointer">
+          <RiSaveFill className="" />
+        </div>
       </h1>
       <table className="w-full border-collapse">
         <thead className="border border-white/15">
@@ -106,10 +108,7 @@ const AppointmentHistory = () => {
             appointments.map((doc, index) => (
               <tr
                 key={doc.$id}
-                className={`text-center border-b border-white/15 
-          ${doc.appointmentStatus === "Pending" ? "bg-yellow-400/10" : ""}
-          ${doc.appointmentStatus === "Rejected" ? "bg-red-400/10" : ""}
-          ${doc.appointmentStatus === "Accepted" ? "bg-green-400/10" : ""}`}
+                className="text-center border-b border-white/15"
               >
                 <td className="border border-white/15 py-2">{index + 1}</td>
                 <td className="border border-white/15 py-2">
@@ -122,16 +121,40 @@ const AppointmentHistory = () => {
                   {doc.phoneNumber || "N/A"}
                 </td>
                 <td className="border border-white/15 py-2">
-                  {doc.appointmentStatus || "N/A"}
+                  <select
+                    value={doc.appointmentStatus || "Pending"}
+                    onChange={(e) => {
+                      handleStatusChange(doc.$id, e.target.value);
+                      log(`Appointment status updated to ${e.target.value}`);
+                    }}
+                    className="bg-transparent p-2 rounded"
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Accepted">Accepted</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
                 </td>
                 <td className="border border-white/15 py-2">
-                  <span>
-                    {doc.appointmentDate
-                      ? new Date(doc.appointmentDate).toLocaleString()
-                      : new Date(
-                          doc.preferredAppointmentDate
-                        ).toLocaleString() || "N/A"}
-                  </span>
+                  {doc.appointmentStatus === "Accepted" ? (
+                    <input
+                      type="datetime-local"
+                      onChange={(e) => {
+                        const newDate = e.target.value;
+                        handleDateChange(doc.$id, newDate);
+                        log(`Appointment date updated to ${newDate}`);
+                      }}
+                      className="bg-transparent p-2 rounded"
+                      value={doc.appointmentDate}
+                    />
+                  ) : (
+                    <span>
+                      {doc.appointmentDate
+                        ? new Date(doc.appointmentDate).toLocaleString()
+                        : new Date(
+                            doc.preferredAppointmentDate
+                          ).toLocaleString() || "N/A"}
+                    </span>
+                  )}
                 </td>
               </tr>
             ))
@@ -148,4 +171,4 @@ const AppointmentHistory = () => {
   );
 };
 
-export default AppointmentHistory;
+export default NewAppointments;

@@ -26,7 +26,7 @@ const Notifications = () => {
   }, []);
 
   return (
-    <div>
+    <div className="max-h-[48rem] overflow-y-auto">
       {logs.length > 0 ? (
         <ul className="">
           {logs.slice().reverse().map((log) => (

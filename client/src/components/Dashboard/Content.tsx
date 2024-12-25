@@ -4,6 +4,7 @@ import Notifications from "./Content/Notifications";
 import AppointmentsToday from "./Content/AppointmentsToday";
 import AppointmentHistory from "./Content/AppointmentHistory";
 import AddPatient from "./Content/AddPatient";
+import NewAppointments from "./Content/NewAppointments";
 
 const Content = ({ selectedContent }: { selectedContent: string }) => {
   if (selectedContent === "Notifications") {
@@ -26,8 +27,14 @@ const Content = ({ selectedContent }: { selectedContent: string }) => {
     );
   } else if (selectedContent === "Add Patient") {
     return (
-      <div className="w-full">
+      <div className="w-full h-fit bg-inherit scale-75 overflow-auto">
         <AddPatient />
+      </div>
+    );
+  } else if (selectedContent === "New Appointments") {
+    return (
+      <div className="w-full">
+        <NewAppointments />
       </div>
     );
   }

@@ -1,10 +1,8 @@
-import { useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   useNavigate,
-  Outlet,
 } from "react-router-dom";
 
 import Button from "./components/Button";
@@ -44,6 +42,7 @@ function MainApp() {
         <Route path="/patients/checkAppointment" element={<CheckAppointment />} />
 
         <Route path="/patients/confirmation" element={<ConfirmationPage />} />
+        <Route path="/patients/confirmation/:patientNumber" element={<ConfirmationPage />} />
 
         <Route path="/doctor" element={<Doctor />} />
 

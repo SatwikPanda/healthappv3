@@ -1,6 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
-
+import React, { useState, useEffect } from "react";
 import { Models, Query } from "appwrite";
 import { databaseId, collectionIdPatients } from "../../../utils/Credentials";
 import { databases } from "../../../utils/appwrite";
@@ -46,21 +44,51 @@ const AppointmentsToday = () => {
       <h1 className="text-4xl font-medium py-14 px-10 w-full border-b-2 bg-white/5 border-[#DB1A5A] rounded-b-xl">
         Appointments Today
       </h1>
-      <div>
-        <br />
+      <div className="overflow-x-auto">
+        {appointments.length > 0 ? (
+          <table className="min-w-full border-collapse border border-gray-200 mt-6">
+            <thead>
+              <tr className="bg-white/15">
+                <th className="border border-white/15 px-4 py-2">#</th>
+                <th className="border border-white/15 px-4 py-2">Patient ID</th>
+                <th className="border border-white/15 px-4 py-2">
+                  Patient Name
+                </th>
+                <th className="border border-white/15 px-4 py-2">
+                  Appointment Time
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointments.map((appointment, index) => (
+                <tr key={appointment.$id} className={index % 2 === 0 ? "" : ""}>
+                  <td className="border border-white/15 px-4 py-2 text-center">
+                    {index + 1}
+                  </td>
+                  <td className="border border-white/15 px-4 py-2 text-center">
+                    {appointment.patientNumber || "N/A"}
+                  </td>
+                  <td className="border border-white/15 px-4 py-2 text-center">
+                    {appointment.fullName || "N/A"}
+                  </td>
+                  <td className="border border-white/15 px-4 py-2 text-center">
+                    {appointment.preferredAppointmentDate
+                      ? new Date(
+                          appointment.preferredAppointmentDate
+                        ).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : "N/A"}
+                  </td> 
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="mt-6 text-center">No appointments for today.</p>
+        )}
       </div>
-      {appointments.length > 0 ? (
-        appointments.map((appointment) => (
-          <div key={appointment.$id}>
-            <p>ID: {appointment.patientNumber}</p>
-            <p>Patient Name: {appointment.fullName}</p>
-            <p>Preferred Date: {appointment.preferredAppointmentDate}</p>
-            <p>Appointment Date: {appointment.appointmentDate}</p>
-          </div>
-        ))
-      ) : (
-        <p>No appointments for today.</p>
-      )}
     </div>
   );
 };

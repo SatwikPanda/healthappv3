@@ -7,7 +7,6 @@ export default function Patient() {
 
   return (
     <div className="flex min-h-screen justify-center items-center flex-col relative">
-      This is the patients form Page
       <PatientForm />
     </div>
   );

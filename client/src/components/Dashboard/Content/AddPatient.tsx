@@ -1,8 +1,9 @@
 import React from 'react'
+import PatientForm from "../../Patient/Form"
 
 const AddPatient = () => {
   return (
-    <div>AddPatient</div>
+    <div><PatientForm /></div>
   )
 }
 

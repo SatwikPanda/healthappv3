@@ -7,6 +7,7 @@ import { IoTodaySharp } from "react-icons/io5";
 import { MdBrowseGallery } from "react-icons/md";
 import { FaUserCheck } from "react-icons/fa6";
 import { IoPersonAddSharp } from "react-icons/io5";
+import { MdOutlinePendingActions } from "react-icons/md";
 
 import logNumber from "../../utils/logNumber";
 
@@ -25,7 +26,7 @@ const LeftSidebar = ({
         <Span
           variant={activeContent === "Add Patient" ? "secondary" : "primary"}
           onClick={() => onSelect("Add Patient")}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 select-none"
         >
           <IoPersonAddSharp className="text-xl" />
           Add Patient
@@ -36,14 +37,7 @@ const LeftSidebar = ({
   const leftSidebarItemsDoctor = () => {
     return (
       <>
-        <Span
-          variant={activeContent === "Check Patient" ? "secondary" : "primary"}
-          onClick={() => onSelect("Check Patient")}
-          className="flex items-center gap-2"
-        >
-          <FaUserCheck className="text-xl" />
-          Check Patient
-        </Span>
+        
       </>
     );
   };
@@ -68,14 +62,14 @@ const LeftSidebar = ({
         <Span
           variant={activeContent === "Notifications" ? "secondary" : "primary"}
           onClick={() => onSelect("Notifications")}
-          className="flex items-center gap-2 justify-between"
+          className="flex items-center gap-2 justify-between select-none"
         >
           <div className="flex gap-2">
             <MdNotificationsActive className="text-xl" />
             Notifications
           </div>
           <div className="py-1 px-2 flex items-center justify-center rounded-md bg-red-500">
-            <span className="text-xs text-white">{notificationNumber}</span>
+            <span className="text-xs text-white select-none">{notificationNumber}</span>
           </div>
         </Span>
         <Span
@@ -83,17 +77,27 @@ const LeftSidebar = ({
             activeContent === "Appointments Today" ? "secondary" : "primary"
           }
           onClick={() => onSelect("Appointments Today")}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 select-none"
         >
           <IoTodaySharp className="text-xl" />
           Appointments Today
         </Span>
         <Span
           variant={
+            activeContent === "New Appointments" ? "secondary" : "primary"
+          }
+          onClick={() => onSelect("New Appointments")}
+          className="flex items-center gap-2 select-none"
+        >
+          <MdOutlinePendingActions className="text-xl"/>
+          New Appointments
+        </Span>
+        <Span
+          variant={
             activeContent === "Appointment History" ? "secondary" : "primary"
           }
           onClick={() => onSelect("Appointment History")}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 select-none"
         >
           <MdBrowseGallery className="text-xl" />
           Appointment History
